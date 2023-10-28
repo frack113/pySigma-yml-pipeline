@@ -1,0 +1,43 @@
+name: Fixing the field naming mess
+priority: 30
+transformations:
+- id: image_fail_path
+  type: detection_item_failure
+  message: Image must only contain file name without any further path components.
+  field_name_conditions:
+  - type: include_fields
+    fields:
+    - Image
+  detection_item_conditions:
+  - type: match_string
+    cond: any
+    pattern: "^\\*\\\\?[^\\\\]+$"
+    negate: true
+- id: image_file_only
+  type: replace_string
+  regex: "^\\*\\\\([^\\\\]+)$"
+  replacement: "\\1"
+  field_name_conditions:
+  - type: include_fields
+    fields:
+    - Image
+- id: field_mapping
+  type: field_name_mapping
+  mapping:
+    EventID:
+    - event_id
+    - evtid
+- id: windows_field_prefix
+  type: field_name_prefix
+  prefix: "win."
+  field_name_cond_not: true
+  field_name_conditions:
+  - type: processing_item_applied
+    processing_item_id: field_mapping
+- id: index_condition
+  type: add_condition
+  conditions:
+    index: windows
+  rule_conditions:
+  - type: logsource
+    product: windows

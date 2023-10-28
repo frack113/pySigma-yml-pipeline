@@ -1,0 +1,18 @@
+name: Placeholder example
+priority: 10
+allowed_backends:
+- splunk
+transformations:
+- id: value_placeholders
+  type: value_placeholders
+  include:
+  - client
+- id: generic_query_excpression_placeholders
+  type: query_expression_placeholders
+  include:
+  - client_operations
+  expression: "[ inputlookup {id} | rename dest as {field} ]"
+vars:
+  client:
+  - "DESKTOP-*"
+  - "NOTEBOOK-*"
