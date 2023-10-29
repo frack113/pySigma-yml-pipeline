@@ -1,0 +1,60 @@
+name: Mapping Filebeat ECS 1.x
+priority: 30
+transformations:
+
+# Auditd Module
+  - id: field_mapping_module_auditd
+    type: field_name_mapping
+    mapping:
+      acct: user.name
+      addr: source.address
+      agid: user.audit.group.id
+      arch: host.architecture
+      auid: user.audit.id
+      comm: process.name
+      cwd: process.working_directory
+      dst: destination.address
+      egid: user.effective.group.id
+      euid: user.effective.id
+      exe: process.executable
+      exit: process.exit_code
+      fsgid: user.filesystem.group.id
+      fsuid: user.filesystem.id
+      gid: user.group.id
+      msg: message
+      ogid: user.owner.group.id
+      ouid: user.owner.id
+      pid: process.pid
+      ppid: process.ppid
+      record_type: event.action
+      res: event.outcome
+      sgid: user.saved.group.id
+      src: source.address
+      suid: user.saved.id
+      terminal: user.terminal
+      uid: user.id
+      user: user.name
+    rule_conditions:
+      - type: logsource
+        service: auditd
+ 
+  - id: auditd_field_prefix
+    type: field_name_prefix
+    prefix: "auditd.log."
+    field_name_cond_not: true
+    field_name_conditions:
+      - type: processing_item_applied
+        processing_item_id: field_mapping_module_auditd
+    rule_conditions:
+      - type: logsource
+        service: auditd
+
+
+# Global filebeat index
+  - id: index_condition
+    type: add_condition
+    conditions:
+      index: filebeat
+    rule_conditions:
+      - type: logsource
+        service: auditd

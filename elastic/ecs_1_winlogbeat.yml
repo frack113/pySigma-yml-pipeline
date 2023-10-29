@@ -1,4 +1,4 @@
-name: Mapping Windows ECS 1.x
+name: Mapping Winlogbeat ECS 1.x
 priority: 30
 transformations:
 
