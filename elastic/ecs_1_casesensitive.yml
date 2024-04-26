@@ -1,0 +1,11 @@
+name: Elastic CaseSensitive
+priority: 20
+transformations:
+  - id: field_case
+    type: regex
+    method: ignore_case_brackets
+    field_name_conditions:
+      - type: include_fields
+        fields: 
+          - Image
+          - CommandLine

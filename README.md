@@ -15,6 +15,7 @@ You can use them, improve them or add new ones.
 ## elastic
 - ecs_1_winlogbeat ECS 1.xx winlogbeat field mapping 
 - ecs_1_filebeat ECS 1.xx filebeat field mapping (only auditd module)
+- ecs_1_casesensitive Use regex to make Case Insensitive search
 
 ## misc
 - placerholder from [sigmahq bloq](https://blog.sigmahq.io/building-flexible-detections-with-sigma-placeholders-7c1b814e2860)
