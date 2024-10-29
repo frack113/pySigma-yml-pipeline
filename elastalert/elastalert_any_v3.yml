@@ -1,6 +1,6 @@
 #Get an error if the query have a ' into the string :)
 transformations:
-  - id: image_file_only
+  - id: quote_of_the_death
     type: replace_string
     regex: "'"
     replacement: "''"
