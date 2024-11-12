@@ -1,0 +1,38 @@
+#Set the index from logsource
+transformations:
+  - id: index_windows
+    type: set_custom_attribute
+    attribute: "es_index"
+    value: "winlogbeat-*"
+    rule_conditions:
+      - type: logsource
+        product: windows
+  - id: index_linux
+    type: set_custom_attribute
+    attribute: "es_index"
+    value: "linux-*"
+    rule_conditions:
+      - type: logsource
+        product: linux
+
+#The elastalert template
+postprocessing:
+  - type: template
+    template: |+
+      name: '{{ rule.id }}'
+      description: '{{ rule.title }}'
+      owner: '{{ rule.author }}'
+     
+      type: any
+      priority:{% set priority = ({"critical":4, "high":3, "medium":2, "low":1, "informational":0 })%} {{ priority["%s" % rule.level]}}
+      alert:
+        - debug
+      
+      index: {% if rule.custom_attributes.es_index is defined %}{{ rule.custom_attributes.es_index }}{% else %}log-*{% endif %}
+      filter:
+        - query:
+            query_string:
+              query: ({{ query }})
+
+finalizers:
+  - type: concat
